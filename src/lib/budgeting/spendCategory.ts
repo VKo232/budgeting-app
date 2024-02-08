@@ -14,11 +14,11 @@ export type BudgetCategoryType = {
 };
 
 export const defaultCategories = [
-  { id: 1, name: 'Food', period: CategoryPeriod.MONTHLY },
-  { id: 2, name: 'Transportation', period: CategoryPeriod.MONTHLY },
-  { id: 3, name: 'Phone', period: CategoryPeriod.YEARLY },
-  { id: 4, name: 'Utilities', period: CategoryPeriod.MONTHLY },
-  { id: 5, name: 'Self Care', period: CategoryPeriod.MONTHLY },
+  { id: 1, name: 'Food', period: CategoryPeriod.MONTHLY, goal: 400 },
+  { id: 2, name: 'Transportation', period: CategoryPeriod.MONTHLY, goal: 60 },
+  { id: 3, name: 'Phone', period: CategoryPeriod.YEARLY, goal: 100 },
+  { id: 4, name: 'Utilities', period: CategoryPeriod.MONTHLY, goal: 100 },
+  { id: 5, name: 'Self Care', period: CategoryPeriod.MONTHLY, goal: 100 },
 ];
 
 export const removeCategory = async (tx: SQLTransactionAsync, id: number) => {
@@ -68,32 +68,42 @@ export const addCategory = async (
     id,
     name,
     period,
-  }: { id?: number | null; name: string; period: CategoryPeriod },
+    goal,
+  }: { id?: number | null; name: string; period: CategoryPeriod; goal: number },
 ) => {
-  if (id) {
-    await tx.executeSqlAsync(
-      'INSERT OR IGNORE into expenses(id,name,period, goal) values (?,?,?)',
-      [id, name, period],
-    );
-  } else {
-    await tx.executeSqlAsync('insert into expenses(name,period) values (?,?)', [
-      name,
-      period,
-    ]);
+  try {
+    if (id) {
+      await tx.executeSqlAsync(
+        'INSERT OR IGNORE into CATEGORIES(id,name,period, goal) values (?,?,?,?)',
+        [id, name, period, goal],
+      );
+    } else {
+      await tx.executeSqlAsync(
+        'insert into CATEGORIES(name,period,goal) values (?,?,?)',
+        [name, period, goal],
+      );
+    }
+  } catch (err) {
+    console.log(err);
+    console.log('err in executing addCategory: ', name, period);
   }
 };
 
 export const setupCategories = async (tx: SQLTransactionAsync) => {
   // create categories table
-  await tx.executeSqlAsync(
-    'create table if not exists CATEGORIES \
+  try {
+    await tx.executeSqlAsync(
+      'CREATE TABLE if not EXISTS CATEGORIES \
           (id integer primary key not null, \
             name TEXT, \
             period integer, \
             goal integer);',
-  );
-  // insert default categories
-  defaultCategories.forEach((category) => {
-    addCategory(tx, category);
-  });
+    );
+    // insert default categories
+    defaultCategories.forEach((category) => {
+      addCategory(tx, category);
+    });
+  } catch (err) {
+    console.log('err initializing spending categories');
+  }
 };

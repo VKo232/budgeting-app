@@ -10,13 +10,17 @@ export type ExpenseType = {
 
 export const setupExpenses = async (tx: SQLTransactionAsync) => {
   // expenses table
-  await tx.executeSqlAsync(
-    'create table if not exists EXPENSES \
+  try {
+    await tx.executeSqlAsync(
+      'create table if not exists EXPENSES \
               (id INTEGER primary key not null, \
                 categoryId INTEGER, \
                 label TEXT,\
                 amount INTEGER,\
-                date DATETIME\
+                date DATETIME,\
                 FOREIGN KEY(categoryId) REFERENCES CATEGORIES(id));',
-  );
+    );
+  } catch (err) {
+    console.log('err initializing db');
+  }
 };

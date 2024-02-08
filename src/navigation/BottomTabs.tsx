@@ -30,7 +30,11 @@ function MyTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
         };
 
         return (
-          <TouchableOpacity onPress={onPress} style={{ flex: 1 }}>
+          <TouchableOpacity
+            onPress={onPress}
+            style={{ flex: 1 }}
+            key={route.key}
+          >
             <Text style={{ color: isFocused ? '#673ab7' : '#222' }}>
               {label ?? ''}
             </Text>

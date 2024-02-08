@@ -1,13 +1,16 @@
 import { NavigationContainer } from '@react-navigation/native';
 import ThemeProvider from './ThemeProvider';
+import DatabaseProvider from './lib/DatabaseProvider';
 import RootStack from './navigation/RootStack';
 
 export default function App() {
   return (
-    <ThemeProvider>
-      <NavigationContainer>
-        <RootStack />
-      </NavigationContainer>
-    </ThemeProvider>
+    <DatabaseProvider>
+      <ThemeProvider>
+        <NavigationContainer>
+          <RootStack />
+        </NavigationContainer>
+      </ThemeProvider>
+    </DatabaseProvider>
   );
 }
