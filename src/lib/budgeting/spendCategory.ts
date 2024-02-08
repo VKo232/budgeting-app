@@ -22,11 +22,17 @@ export const defaultCategories = [
 ];
 
 export const removeCategory = async (tx: SQLTransactionAsync, id: number) => {
-  if (id in defaultCategories.map((cat) => cat.id)) {
-    console.warn('removing invalid category');
-    return;
+  try {
+    if (id in defaultCategories.map((cat) => cat.id)) {
+      console.warn('removing invalid category');
+      return;
+    }
+    await tx.executeSqlAsync('DELETE FROM CATEGORIES WHERE id=? LIMIT 1;', [
+      id,
+    ]);
+  } catch (err) {
+    console.log(err);
   }
-  await tx.executeSqlAsync('DELETE FROM CATEGORIES', [id]);
 };
 
 // cannot update default category name
@@ -34,25 +40,28 @@ export const updateCategory = async (
   tx: SQLTransactionAsync,
   newCat: BudgetCategoryType,
 ) => {
-  if (newCat.id in defaultCategories.map((cat) => cat.id)) {
-    await tx.executeSqlAsync(
-      'UPDATE CATEGORIES \
-      SET period=?,\
-          goal=?\
-      WHERE id=?\
-    ',
-      [newCat.period, newCat.goal, newCat.id],
-    );
-  } else {
-    await tx.executeSqlAsync(
-      'UPDATE CATEGORIES \
-      SET period=?,\
-          goal=?,\
-          name=?\
-      WHERE id=?\
-    ',
-      [newCat.period, newCat.goal, newCat.goal, newCat.id],
-    );
+  try {
+    if (newCat.id in defaultCategories.map((cat) => cat.id)) {
+      await tx.executeSqlAsync(
+        'UPDATE CATEGORIES \
+         SET period=?,\
+             goal=?\
+         WHERE id=?;',
+        [newCat.period, newCat.goal, newCat.id],
+      );
+    } else {
+      await tx.executeSqlAsync(
+        'UPDATE CATEGORIES \
+         SET period=?,\
+             goal=?,\
+             name=?\
+         WHERE id=?;',
+        [newCat.period, newCat.goal, newCat.goal, newCat.id],
+      );
+    }
+  } catch (err) {
+    console.log('err: update failed', newCat);
+    console.log(err);
   }
 };
 
@@ -74,12 +83,12 @@ export const addCategory = async (
   try {
     if (id) {
       await tx.executeSqlAsync(
-        'INSERT OR IGNORE into CATEGORIES(id,name,period, goal) values (?,?,?,?)',
+        'INSERT OR IGNORE into CATEGORIES(id,name,period, goal) values (?,?,?,?);',
         [id, name, period, goal],
       );
     } else {
       await tx.executeSqlAsync(
-        'insert into CATEGORIES(name,period,goal) values (?,?,?)',
+        'insert into CATEGORIES(name,period,goal) values (?,?,?);',
         [name, period, goal],
       );
     }

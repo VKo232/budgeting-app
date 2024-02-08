@@ -6,6 +6,59 @@ export type ExpenseType = {
   label: string; // max 50 chars
   date: Moment;
   amount: number; //
+  categoryId: number;
+};
+
+export const addExpense = async (
+  tx: SQLTransactionAsync,
+  exp: Omit<ExpenseType, 'id'>,
+) => {
+  try {
+    await tx.executeSqlAsync(
+      'insert into EXPENSES(label,date,amount,categoryId) values (?,?,?,?);',
+      [
+        exp.label,
+        exp.date.utc().format('YYYY-MM-DD HH:mm:ss'),
+        exp.amount,
+        exp.categoryId,
+      ],
+    );
+  } catch (err) {
+    console.log('err: updating expense');
+  }
+};
+
+export const removeExpense = async (tx: SQLTransactionAsync, id: number) => {
+  try {
+    await tx.executeSqlAsync('DELETE FROM EXPENSES WHERE id=?;', [id]);
+  } catch (err) {
+    console.log('err: updating expense');
+  }
+};
+
+export const updateExpense = async (
+  tx: SQLTransactionAsync,
+  exp: ExpenseType,
+) => {
+  try {
+    await tx.executeSqlAsync(
+      'UPDATE EXPENSES \
+       SET amount=?,\
+           date=?,\
+           lablel=?,\
+           categoryId=?\
+       WHERE id=?;',
+      [
+        exp.amount,
+        exp.date.utc().format('YYYY-MM-DD HH:mm:ss'),
+        exp.label,
+        exp.categoryId,
+        exp.id,
+      ],
+    );
+  } catch (err) {
+    console.log('err: updating expense');
+  }
 };
 
 export const setupExpenses = async (tx: SQLTransactionAsync) => {
