@@ -1,14 +1,16 @@
 export const Routes = {
   // root
-  Home: 'homeScreen',
+  Home: 'HomeScreen',
   //Bottom tab
-  BottomTab: 'bottomTab',
-  Note: 'noteScreen',
-  Gallery: 'galleryScreen',
-  Budget: 'budgetScreen',
-  Camera: 'cameraScreen',
-  Settings: 'settingScreen',
-
-  NotesNavigator: 'noteDrawer',
-  NotesHome: 'noteHome',
+  BottomTab: 'BottomTab',
+  Note: 'NoteScreen',
+  Gallery: 'GalleryScreen',
+  Budget: 'BudgetStack',
+  Camera: 'CameraScreen',
+  Settings: 'SettingScreen',
+  // notes
+  NotesNavigator: 'NoteDrawer',
+  NotesHome: 'NoteHome',
+  // Budgeting
+  BudgetingHome: 'BudgetingHome',
 } as const;

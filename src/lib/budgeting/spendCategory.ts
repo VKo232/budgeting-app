@@ -65,6 +65,11 @@ export const updateCategory = async (
   }
 };
 
+export type AddCategoryType = {
+  [K in keyof BudgetCategoryType]: K extends 'id'
+    ? BudgetCategoryType[K] | null | undefined
+    : BudgetCategoryType[K];
+};
 /**
  * adds expense with date, id, period
  * @param tx SQLTransactionAsync
@@ -73,12 +78,7 @@ export const updateCategory = async (
  */
 export const addCategory = async (
   tx: SQLTransactionAsync,
-  {
-    id,
-    name,
-    period,
-    goal,
-  }: { id?: number | null; name: string; period: CategoryPeriod; goal: number },
+  { id, name, period, goal }: AddCategoryType,
 ) => {
   try {
     if (id) {

@@ -5,13 +5,15 @@ export type ExpenseType = {
   id: number;
   label: string; // max 50 chars
   date: Moment;
-  amount: number; //
+  amount: number;
   categoryId: number;
 };
 
+export type AddExpenseType = Omit<ExpenseType, 'id'>;
+
 export const addExpense = async (
   tx: SQLTransactionAsync,
-  exp: Omit<ExpenseType, 'id'>,
+  exp: AddExpenseType,
 ) => {
   try {
     await tx.executeSqlAsync(
@@ -24,7 +26,8 @@ export const addExpense = async (
       ],
     );
   } catch (err) {
-    console.log('err: updating expense');
+    console.log(err);
+    console.log('err: inserting expense');
   }
 };
 
@@ -32,7 +35,8 @@ export const removeExpense = async (tx: SQLTransactionAsync, id: number) => {
   try {
     await tx.executeSqlAsync('DELETE FROM EXPENSES WHERE id=?;', [id]);
   } catch (err) {
-    console.log('err: updating expense');
+    console.log(err);
+    console.log('err: removing expense');
   }
 };
 
@@ -57,6 +61,7 @@ export const updateExpense = async (
       ],
     );
   } catch (err) {
+    console.log(err);
     console.log('err: updating expense');
   }
 };

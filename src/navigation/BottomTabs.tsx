@@ -3,7 +3,8 @@ import {
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 import { Text, TouchableOpacity, View } from 'react-native';
-import NoteHome from '../screens/notes/NoteHomeScreen';
+import NoteHome from '../screens/notes/NoteHome';
+import BudgetStack from './BudgetStack';
 import { BottomTabsParamList } from './navigation';
 import { Routes } from './routeConstants';
 
@@ -48,9 +49,6 @@ function MyTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
 const Camera = () => {
   return <View></View>;
 };
-const Budget = () => {
-  return <View></View>;
-};
 const Gallery = () => {
   return <View></View>;
 };
@@ -77,12 +75,12 @@ export default function BottomTabs() {
       <Tab.Screen
         name={Routes.Camera}
         component={Camera}
-        options={{ tabBarLabel: '' }}
+        options={{ tabBarLabel: 'Camera' }}
       />
       <Tab.Screen
         name={Routes.Budget}
-        component={Budget}
-        options={{ tabBarLabel: 'Budget' }}
+        component={BudgetStack}
+        options={{ tabBarLabel: 'Camera' }}
       />
       <Tab.Screen
         name={Routes.Settings}

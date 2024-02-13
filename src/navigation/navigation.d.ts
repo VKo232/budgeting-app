@@ -6,10 +6,14 @@ import type {
 import type { StackScreenProps } from '@react-navigation/stack';
 import { Routes } from './routeConstants';
 
+export type BudgetingStackParamList = {
+  [Routes.BudgetingHome]: undefined;
+};
+
 export type RootStackParamList = {
   [Routes.BottomTab]: NavigatorScreenParams<
     BottomTabsParamList,
-    [Routes.NotesHom]
+    [Routes.NotesHome]
   >;
 
   [Routes.NotesNavigator]: NavigatorScreenParams<
@@ -23,7 +27,10 @@ export type RootStackScreenProps<T extends keyof RootStackParamList> =
   StackScreenProps<RootStackParamList, T>;
 
 export type BottomTabsParamList = {
-  [Routes.NotesHome]: undefined;
+  [Routes.NotesHome]: NavigatorScreenParams<
+    BudgetingStackParamList,
+    [Routes.BudgetingHome]
+  >;
   [Routes.Gallery]: undefined;
   [Routes.Camera]: undefined;
   [Routes.Budget]: undefined;
