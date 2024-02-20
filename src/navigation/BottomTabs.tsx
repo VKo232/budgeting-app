@@ -1,50 +1,13 @@
-import {
-  BottomTabBarProps,
-  createBottomTabNavigator,
-} from '@react-navigation/bottom-tabs';
-import { Text, TouchableOpacity, View } from 'react-native';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import clsx from 'clsx';
+import { Text, View } from 'react-native';
 import NoteHome from '../screens/notes/NoteHome';
 import BudgetStack from './BudgetStack';
 import { BottomTabsParamList } from './navigation';
 import { Routes } from './routeConstants';
 
 const Tab = createBottomTabNavigator<BottomTabsParamList>();
-
-function MyTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
-  return (
-    <View style={{ flexDirection: 'row' }}>
-      {state.routes.map((route, index) => {
-        const { options } = descriptors[route.key];
-        const label = options.tabBarLabel as string;
-        const isFocused = state.index === index;
-
-        const onPress = () => {
-          const event = navigation.emit({
-            type: 'tabPress',
-            target: route.key,
-            canPreventDefault: true,
-          });
-
-          if (!isFocused && !event.defaultPrevented) {
-            navigation.navigate(route.name, route.params);
-          }
-        };
-
-        return (
-          <TouchableOpacity
-            onPress={onPress}
-            style={{ flex: 1 }}
-            key={route.key}
-          >
-            <Text style={{ color: isFocused ? '#673ab7' : '#222' }}>
-              {label ?? ''}
-            </Text>
-          </TouchableOpacity>
-        );
-      })}
-    </View>
-  );
-}
 
 const Camera = () => {
   return <View></View>;
@@ -59,33 +22,116 @@ const Settings = () => {
 export default function BottomTabs() {
   return (
     <Tab.Navigator
-      tabBar={(props) => <MyTabBar {...props} />}
       initialRouteName={Routes.NotesHome}
+      screenOptions={{
+        headerShown: false,
+      }}
+      backBehavior="history"
     >
       <Tab.Screen
         name={Routes.NotesHome}
         component={NoteHome}
-        options={{ tabBarLabel: 'Note' }}
+        options={{
+          tabBarLabel: 'Note',
+          tabBarIcon: ({ focused }) => {
+            return (
+              <View
+                className={clsx('justify-center', 'align-middle', 'bg-bgDark')}
+              >
+                <Ionicons
+                  className={clsx(focused ? 'text-gray-600' : 'text-blue-950')}
+                  name="document"
+                  size={24}
+                />
+                <Text style={{ fontSize: 12, color: '#16247d' }}>Note</Text>
+              </View>
+            );
+          },
+        }}
       />
       <Tab.Screen
         name={Routes.Gallery}
         component={Gallery}
-        options={{ tabBarLabel: 'Gallery' }}
+        options={{
+          tabBarLabel: 'Gallery',
+          tabBarIcon: ({ focused }) => {
+            return (
+              <View
+                className={clsx('justify-center', 'align-middle', 'bg-bgDark')}
+              >
+                <Ionicons
+                  className={clsx(focused ? 'text-gray-600' : 'text-blue-950')}
+                  name="images"
+                  size={24}
+                />
+                <Text style={{ fontSize: 12, color: '#16247d' }}>Gallery</Text>
+              </View>
+            );
+          },
+        }}
       />
       <Tab.Screen
         name={Routes.Camera}
         component={Camera}
-        options={{ tabBarLabel: 'Camera' }}
+        options={{
+          tabBarLabel: 'Camera',
+          tabBarIcon: ({ focused }) => {
+            return (
+              <View
+                className={clsx('justify-center', 'align-middle', 'bg-bgDark')}
+              >
+                <Ionicons
+                  className={clsx(focused ? 'text-gray-600' : 'text-blue-950')}
+                  name="camera"
+                  size={24}
+                />
+                <Text style={{ fontSize: 12, color: '#16247d' }}>Camera</Text>
+              </View>
+            );
+          },
+        }}
       />
       <Tab.Screen
         name={Routes.Budget}
         component={BudgetStack}
-        options={{ tabBarLabel: 'Camera' }}
+        options={{
+          tabBarLabel: 'Budget',
+          tabBarIcon: ({ focused }) => {
+            return (
+              <View
+                className={clsx('justify-center', 'align-middle', 'bg-bgDark')}
+              >
+                <Ionicons
+                  className={clsx(focused ? 'text-gray-600' : 'text-blue-950')}
+                  name="checkmark-circle"
+                  size={24}
+                />
+                <Text style={{ fontSize: 12, color: '#16247d' }}>Budget</Text>
+              </View>
+            );
+          },
+        }}
       />
       <Tab.Screen
         name={Routes.Settings}
         component={Settings}
-        options={{ tabBarLabel: 'Settings' }}
+        options={{
+          tabBarLabel: 'Settings',
+          tabBarIcon: ({ focused }) => {
+            return (
+              <View
+                className={clsx('justify-center', 'align-middle', 'bg-bgDark')}
+              >
+                <Ionicons
+                  className={clsx(focused ? 'text-gray-600' : 'text-blue-950')}
+                  name="settings"
+                  size={24}
+                />
+                <Text style={{ fontSize: 12, color: '#16247d' }}>Settings</Text>
+              </View>
+            );
+          },
+        }}
       />
     </Tab.Navigator>
   );

@@ -28,12 +28,15 @@ export type RootStackScreenProps<T extends keyof RootStackParamList> =
 
 export type BottomTabsParamList = {
   [Routes.NotesHome]: NavigatorScreenParams<
-    BudgetingStackParamList,
+    NoteDrawerScreenProps,
     [Routes.BudgetingHome]
   >;
   [Routes.Gallery]: undefined;
   [Routes.Camera]: undefined;
-  [Routes.Budget]: undefined;
+  [Routes.Budget]: NavigatorScreenParams<
+    BudgetingStackParamList,
+    [Routes.NotesHome]
+  >;
 
   [Routes.Settings]: undefined;
 };
