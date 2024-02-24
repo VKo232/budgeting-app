@@ -1,5 +1,6 @@
 import { ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import CategoryUsage from './components/CategoryUsage';
 
 const TitleBar = () => {
   return (
@@ -16,13 +17,6 @@ const Graph = () => {
     </View>
   );
 };
-const BudgetingUsages = () => {
-  return (
-    <View>
-      <Text>usages</Text>
-    </View>
-  );
-};
 
 // type Props = NativeStackScreenProps<BudgetingStackParamList, 'BudgetingHome'>;
 
@@ -36,7 +30,7 @@ const BudgetingHome = () => {
     >
       <TitleBar />
       <Graph />
-      <BudgetingUsages />
+      <CategoryUsage />
     </ScrollView>
   );
 };
