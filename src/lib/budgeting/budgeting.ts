@@ -6,7 +6,6 @@ import {
   ExpenseType,
   addExpense,
   removeExpense,
-  setupExpenses,
   updateExpense,
 } from './expense';
 import {
@@ -14,16 +13,10 @@ import {
   BudgetCategoryType,
   addCategory,
   removeCategory,
-  setupCategories,
   updateCategory,
 } from './spendCategory';
 
-export const setupBudgeting = async (tx: SQLTransactionAsync) => {
-  await setupCategories(tx);
-  await setupExpenses(tx);
-};
-
-export const useBudgeting = () => {
+const useBudgeting = () => {
   const db = useContext(DatabaseContext);
 
   return {
@@ -60,3 +53,5 @@ export const useBudgeting = () => {
     },
   };
 };
+
+export default useBudgeting;

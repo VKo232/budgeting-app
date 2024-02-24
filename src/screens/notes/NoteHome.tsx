@@ -1,9 +1,8 @@
-import React from 'react';
 import { Text, View } from 'react-native';
 
 const NoteHome = () => {
   return (
-    <View>
+    <View className="h-full bg-gray-700">
       <Text>Hi</Text>
     </View>
   );

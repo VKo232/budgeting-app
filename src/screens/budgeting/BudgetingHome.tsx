@@ -1,4 +1,3 @@
-import React from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -33,7 +32,7 @@ const BudgetingHome = () => {
   return (
     <ScrollView
       style={{ paddingTop: top }}
-      className={'text-textPrimary bg-bgDark'}
+      className={'text-textPrimary bg-gray-700'}
     >
       <TitleBar />
       <Graph />
