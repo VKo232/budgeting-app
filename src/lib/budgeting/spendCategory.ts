@@ -11,14 +11,46 @@ export type BudgetCategoryType = {
   name: string;
   period: CategoryPeriod;
   goal: number; // goal is integer 100 represents $1
+  color: BarColor;
 };
+export type BarColor = 'green' | 'blue' | 'purple' | 'orange' | 'red';
 
 export const defaultCategories = [
-  { id: 1, name: 'Food', period: CategoryPeriod.MONTHLY, goal: 400 },
-  { id: 2, name: 'Transportation', period: CategoryPeriod.MONTHLY, goal: 60 },
-  { id: 3, name: 'Phone', period: CategoryPeriod.YEARLY, goal: 100 },
-  { id: 4, name: 'Utilities', period: CategoryPeriod.MONTHLY, goal: 100 },
-  { id: 5, name: 'Self Care', period: CategoryPeriod.MONTHLY, goal: 100 },
+  {
+    id: 1,
+    name: 'Food',
+    period: CategoryPeriod.MONTHLY,
+    goal: 400,
+    color: 'orange',
+  },
+  {
+    id: 2,
+    name: 'Transportation',
+    period: CategoryPeriod.MONTHLY,
+    goal: 60,
+    color: 'green',
+  },
+  {
+    id: 3,
+    name: 'Phone',
+    period: CategoryPeriod.YEARLY,
+    goal: 100,
+    color: 'blue',
+  },
+  {
+    id: 4,
+    name: 'Utilities',
+    period: CategoryPeriod.MONTHLY,
+    goal: 100,
+    color: 'blue',
+  },
+  {
+    id: 5,
+    name: 'Self Care',
+    period: CategoryPeriod.MONTHLY,
+    goal: 100,
+    color: 'purple',
+  },
 ];
 
 export const removeCategory = async (tx: SQLTransactionAsync, id: number) => {
@@ -45,9 +77,10 @@ export const updateCategory = async (
       await tx.executeSqlAsync(
         'UPDATE CATEGORIES \
          SET period=?,\
-             goal=?\
+             goal=?,\
+             color=?\
          WHERE id=?;',
-        [newCat.period, newCat.goal, newCat.id],
+        [newCat.period, newCat.goal, newCat.color, newCat.id],
       );
     } else {
       await tx.executeSqlAsync(
@@ -55,8 +88,9 @@ export const updateCategory = async (
          SET period=?,\
              goal=?,\
              name=?\
+             color=?\
          WHERE id=?;',
-        [newCat.period, newCat.goal, newCat.goal, newCat.id],
+        [newCat.period, newCat.goal, newCat.goal, newCat.color, newCat.id],
       );
     }
   } catch (err) {
@@ -78,18 +112,18 @@ export type AddCategoryType = {
  */
 export const addCategory = async (
   tx: SQLTransactionAsync,
-  { id, name, period, goal }: AddCategoryType,
+  { id, name, period, goal, color }: AddCategoryType,
 ) => {
   try {
     if (id) {
       await tx.executeSqlAsync(
-        'INSERT OR IGNORE into CATEGORIES(id,name,period, goal) values (?,?,?,?);',
-        [id, name, period, goal],
+        'INSERT OR IGNORE into CATEGORIES(id,name,period, goal,color) values (?,?,?,?,?);',
+        [id, name, period, goal, color],
       );
     } else {
       await tx.executeSqlAsync(
-        'insert into CATEGORIES(name,period,goal) values (?,?,?);',
-        [name, period, goal],
+        'insert into CATEGORIES(name,period,goal,color) values (?,?,?,?);',
+        [name, period, goal, color],
       );
     }
   } catch (err) {
@@ -105,12 +139,13 @@ export const setupCategories = async (tx: SQLTransactionAsync) => {
       'CREATE TABLE if not EXISTS CATEGORIES \
           (id integer primary key not null, \
             name TEXT, \
-            period integer, \
-            goal integer);',
+            period INTEGER, \
+            goal INTEGER, \
+            color TEXT);',
     );
     // insert default categories
     defaultCategories.forEach((category) => {
-      addCategory(tx, category);
+      addCategory(tx, { ...category, color: category.color as BarColor });
     });
   } catch (err) {
     console.log('err initializing spending categories');

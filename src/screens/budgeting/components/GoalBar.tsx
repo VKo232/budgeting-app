@@ -1,18 +1,19 @@
+import clsx from 'clsx';
 import { View, ViewProps } from 'react-native';
 import { colors } from '../../../common/colors';
+import { BarColor } from '../../../lib/budgeting/spendCategory';
 
 type Props = ViewProps & {
   color: BarColor;
   percentage: number;
 };
-export type BarColor = 'green' | 'blue' | 'purple' | 'orange' | 'red';
 
-const GoalBar = ({ color, percentage, ...props }: Props) => {
+const GoalBar = ({ color, percentage, className, style, ...props }: Props) => {
   return (
     <View
-      className="flex-row rounded-xl h-3 w-24 overflow-hidden"
+      className={clsx('flex-row rounded-xl overflow-hidden', className)}
       {...props}
-      style={{ flexDirection: 'row', width: 100 }}
+      style={[style]}
     >
       <View
         style={{

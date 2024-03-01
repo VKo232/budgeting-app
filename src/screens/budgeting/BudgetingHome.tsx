@@ -1,4 +1,4 @@
-import { ScrollView, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import CategoryUsage from './components/CategoryUsage';
 
@@ -24,14 +24,14 @@ const BudgetingHome = () => {
   const { top } = useSafeAreaInsets();
 
   return (
-    <ScrollView
-      style={{ paddingTop: top }}
+    <View
+      style={{ paddingTop: top, flex: 1 }}
       className={'text-textPrimary bg-gray-700'}
     >
       <TitleBar />
       <Graph />
       <CategoryUsage />
-    </ScrollView>
+    </View>
   );
 };
 

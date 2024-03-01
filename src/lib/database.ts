@@ -4,6 +4,7 @@ import { setupCategories } from './budgeting/spendCategory';
 
 const database = openDatabase('db.db');
 const setupBudgeting = async (tx: SQLTransactionAsync) => {
+  // await tx.executeSqlAsync('drop table categories;');
   await setupCategories(tx);
   await setupExpenses(tx);
 };
