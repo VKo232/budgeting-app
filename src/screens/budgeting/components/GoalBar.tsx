@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { View, ViewProps } from 'react-native';
 import { colors } from '../../../common/colors';
-import { BarColor } from '../../../lib/budgeting/spendCategory';
+import { BarColor } from '../../../lib/budgeting/category';
 
 type Props = ViewProps & {
   color: BarColor;

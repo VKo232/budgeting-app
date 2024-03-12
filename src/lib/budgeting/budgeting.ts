@@ -2,6 +2,13 @@ import { ResultSet, SQLTransactionAsync } from 'expo-sqlite';
 import { useContext } from 'react';
 import { DatabaseContext } from '../DatabaseProvider';
 import {
+  AddCategoryType,
+  CategoryType,
+  addCategory,
+  removeCategory,
+  updateCategory,
+} from './category';
+import {
   AddExpenseType,
   ExpenseType,
   addExpense,
@@ -9,13 +16,6 @@ import {
   updateExpense,
 } from './expense';
 import { getAllCategorySpending } from './queries';
-import {
-  AddCategoryType,
-  BudgetCategoryType,
-  addCategory,
-  removeCategory,
-  updateCategory,
-} from './spendCategory';
 
 const useBudgeting = () => {
   const db = useContext(DatabaseContext);
@@ -43,7 +43,7 @@ const useBudgeting = () => {
       });
     },
 
-    updateCategory: async (category: BudgetCategoryType) => {
+    updateCategory: async (category: CategoryType) => {
       await db.transactionAsync(async (tx: SQLTransactionAsync) => {
         await updateCategory(tx, category);
       });

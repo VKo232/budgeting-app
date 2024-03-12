@@ -2,7 +2,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import clsx from 'clsx';
 import { useMemo } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import { BarColor } from '../../../lib/budgeting/spendCategory';
+import { BarColor } from '../../../lib/budgeting/category';
 import GoalBar from './GoalBar';
 
 export type CategoryUsageBarProps = {
