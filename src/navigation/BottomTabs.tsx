@@ -26,12 +26,13 @@ export default function BottomTabs() {
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
+        tabBarHideOnKeyboard: true,
       }}
       tabBar={(props) => (
-        <>
-          <StatusBar style="auto" />
+        <View>
+          <StatusBar style={'dark'} />
           <BottomTabBar {...props} />
-        </>
+        </View>
       )}
       backBehavior="history"
     >

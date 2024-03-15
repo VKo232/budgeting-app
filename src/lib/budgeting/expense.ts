@@ -1,10 +1,13 @@
+import dayjs from 'dayjs';
 import { SQLTransactionAsync } from 'expo-sqlite';
-import { Moment } from 'moment';
+
+import utc from 'dayjs/plugin/utc';
+dayjs.extend(utc);
 
 export type ExpenseType = {
   id: number;
   label: string; // max 50 chars
-  date: Moment;
+  date: Date;
   amount: number;
   categoryId: number;
 };
@@ -20,7 +23,7 @@ export const addExpense = async (
       'insert into EXPENSES(label,date,amount,categoryId) values (?,?,?,?);',
       [
         exp.label,
-        exp.date.utc().format('YYYY-MM-DD HH:mm:ss'),
+        dayjs(exp.date).format('YYYY-MM-DD HH:mm:ss'),
         exp.amount,
         exp.categoryId,
       ],
@@ -54,7 +57,7 @@ export const updateExpense = async (
        WHERE id=?;',
       [
         exp.amount,
-        exp.date.utc().format('YYYY-MM-DD HH:mm:ss'),
+        dayjs(exp.date).format('YYYY-MM-DD HH:mm:ss'),
         exp.label,
         exp.categoryId,
         exp.id,

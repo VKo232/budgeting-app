@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import AddExpenseModal from './components/AddExpenseModal';
 import CategoryUsage from './components/CategoryUsage';
 
 const TitleBar = () => {
@@ -18,19 +20,31 @@ const Graph = () => {
   );
 };
 
-// type Props = NativeStackScreenProps<BudgetingStackParamList, 'BudgetingHome'>;
+export type AddModalProps = { categoryId: number; categoryName: string };
 
 const BudgetingHome = () => {
   const { top } = useSafeAreaInsets();
-
+  const [showModal, setShowModal] = useState(false);
+  const [addModalProps, setAddModalProps] = useState<AddModalProps>({
+    categoryId: 0,
+    categoryName: '',
+  });
   return (
     <View
-      style={{ paddingTop: top, flex: 1 }}
-      className={'text-textPrimary bg-gray-700'}
+      style={{ paddingTop: top }}
+      className={'text-textPrimary bg-gray-700 flex-1'}
     >
+      <AddExpenseModal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        {...addModalProps}
+      />
       <TitleBar />
       <Graph />
-      <CategoryUsage />
+      <CategoryUsage
+        showModal={setShowModal}
+        setShowModalProps={setAddModalProps}
+      />
     </View>
   );
 };

@@ -3,21 +3,26 @@ import clsx from 'clsx';
 import { useMemo } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { BarColor } from '../../../lib/budgeting/category';
+import { AddModalProps } from '../BudgetingHome';
 import GoalBar from './GoalBar';
 
 export type CategoryUsageBarProps = {
+  onAdd: (_: AddModalProps) => void;
   onPress: () => void;
   label: string;
   goal: number;
   total: number;
   color: BarColor;
+  id: number;
 };
 const CategoryUsageBar = ({
+  onAdd,
   onPress,
   label,
   goal,
   total,
   color,
+  id,
 }: CategoryUsageBarProps) => {
   const percentage = useMemo(() => {
     if (total > goal) {
@@ -50,6 +55,7 @@ const CategoryUsageBar = ({
                 flex: 1,
                 alignItems: 'center',
               }}
+              onPress={() => onAdd({ categoryId: id, categoryName: label })}
             >
               <Ionicons
                 style={{ flex: 1, color: 'rgb(209 213 219)' }}

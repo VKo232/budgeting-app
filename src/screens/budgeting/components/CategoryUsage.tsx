@@ -4,17 +4,23 @@ import { useEffect, useState } from 'react';
 import { FlatList, View } from 'react-native';
 import useBudgeting from '../../../lib/budgeting/budgeting';
 import { GetAllCategoriesResult } from '../../../lib/budgeting/queries';
+import { AddModalProps } from '../BudgetingHome';
 import CategoryUsageBar from './CategoryUsageBar';
 
 type CategoryUsageProps = {
   showModal?: (_: boolean) => void;
+  setShowModalProps?: (_: AddModalProps) => void;
 };
 
-const CategoryUsage = ({ showModal = () => {} }: CategoryUsageProps) => {
+const CategoryUsage = ({
+  showModal = () => {},
+  setShowModalProps = () => {},
+}: CategoryUsageProps) => {
   const [categoryData, setCategoryData] = useState<GetAllCategoriesResult[]>(
     [],
   );
-  const shouldShowModal = () => {
+  const shouldShowModal = (props: AddModalProps) => {
+    setShowModalProps(props);
     showModal(true);
   };
 
@@ -36,7 +42,8 @@ const CategoryUsage = ({ showModal = () => {} }: CategoryUsageProps) => {
         renderItem={({ item }: { item: GetAllCategoriesResult }) => {
           return (
             <CategoryUsageBar
-              onPress={shouldShowModal}
+              onPress={() => {}}
+              onAdd={shouldShowModal}
               label={item.name}
               {...item}
             />
