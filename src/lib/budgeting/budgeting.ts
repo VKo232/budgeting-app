@@ -1,4 +1,4 @@
-import { ResultSet, SQLTransactionAsync } from 'expo-sqlite';
+import { SQLTransactionAsync } from 'expo-sqlite';
 import { useContext } from 'react';
 import { DatabaseContext } from '../DatabaseProvider';
 import {
@@ -15,18 +15,11 @@ import {
   removeExpense,
   updateExpense,
 } from './expense';
-import { getAllCategorySpending } from './queries';
 
 const useBudgeting = () => {
   const db = useContext(DatabaseContext);
 
   return {
-    getAllCategorySpending: (callback: (_: ResultSet | null) => void) => {
-      return db.transactionAsync(async (tx: SQLTransactionAsync) => {
-        const results = await getAllCategorySpending(tx);
-        callback(results);
-      });
-    },
     removeExpense: async (id: number) => {
       await db.transactionAsync(async (tx: SQLTransactionAsync) => {
         await removeExpense(tx, id);

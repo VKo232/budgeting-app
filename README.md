@@ -14,3 +14,7 @@ Ideas
   - year
   - month
   - storage
+
+NOTES: FOR IOS INTEGRATION
+
+- need to add victory chart https://commerce.nearform.com/open-source/victory/docs/native
