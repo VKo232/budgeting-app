@@ -8,6 +8,11 @@ type Props = ViewProps & {
   percentage: number;
 };
 
+/**
+ *
+ * @param percentage number out of 100
+ * @returns
+ */
 const GoalBar = ({ color, percentage, className, style, ...props }: Props) => {
   return (
     <View

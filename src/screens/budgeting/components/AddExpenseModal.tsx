@@ -36,6 +36,7 @@ type Props = {
   categoryName: string;
   showModal: boolean;
   setShowModal: (_: boolean) => void;
+  onDismiss: () => void;
 };
 const AddExpenseModal = (props: Props) => {
   const [amount, setAmount] = useState<number>(0);
@@ -67,6 +68,9 @@ const AddExpenseModal = (props: Props) => {
   const onDismiss = () => {
     Keyboard.dismiss();
     resetFields();
+    if (props.onDismiss) {
+      props.onDismiss();
+    }
     props.setShowModal(false);
   };
 
@@ -123,12 +127,14 @@ const AddExpenseModal = (props: Props) => {
           />
           <View className="h-[50px] bg-emerald-400 rounded-lg justify-center p-2 mt-4 w-[200px]">
             <TouchableOpacity
+              disabled={!amount || amount <= 0}
               onPress={onSubmit}
               style={{
                 flex: 1,
                 flexDirection: 'row',
                 justifyContent: 'center',
                 alignItems: 'center',
+                opacity: !amount || amount <= 0 ? 0.4 : 1,
               }}
             >
               <Text className=" text-center font-bold text-white text-lg flex-1">

@@ -4,6 +4,7 @@ import { ResultSet } from 'expo-sqlite';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { Text, View } from 'react-native';
 import { CartesianChart, Line } from 'victory-native';
+// @ts-expect-error importing ttf file
 import inter from '../../../../assets/fonts/Inter-Medium.ttf';
 import { DatabaseContext } from '../../../../lib/DatabaseProvider';
 import { getRunningTotal } from '../../../../lib/budgeting/queries';
@@ -12,15 +13,22 @@ import { DisplayType } from '../../BudgetingHome';
 type UsageGraphProps = {
   displayData: { startDate: Date; endDate: Date };
   displayType: DisplayType;
-  xLabel: string;
+  displayPeriod: number;
+  goalTotal: number;
 };
 
 type GraphDataType = {
   date: number;
   total: number;
+  goal: number;
 };
 
-const UsageGraph = ({ displayData, displayType, xLabel }: UsageGraphProps) => {
+const UsageGraph = ({
+  displayData,
+  displayType,
+  displayPeriod,
+  goalTotal,
+}: UsageGraphProps) => {
   const font = useFont(inter, 12);
   const db = useContext(DatabaseContext);
   const [graphData, setGraphData] = useState<GraphDataType[]>([]);
@@ -35,7 +43,7 @@ const UsageGraph = ({ displayData, displayType, xLabel }: UsageGraphProps) => {
     [displayType],
   );
 
-  const domain = useMemo(() => {
+  const domain: { x: [number, number] } = useMemo(() => {
     const startDate = getDateNumber(displayData.startDate);
     const endDate = getDateNumber(displayData.endDate);
     return { x: [startDate, endDate] };
@@ -48,9 +56,11 @@ const UsageGraph = ({ displayData, displayType, xLabel }: UsageGraphProps) => {
       return {
         date: dateNumber,
         total: item.total,
+        goal: goalTotal,
       };
     });
   };
+
   useEffect(() => {
     db.transactionAsync(async (tx) => {
       const catData = await getRunningTotal(
@@ -58,26 +68,44 @@ const UsageGraph = ({ displayData, displayType, xLabel }: UsageGraphProps) => {
         displayData.startDate,
         displayData.endDate,
       );
-      const initial = { date: getDateNumber(displayData.startDate), total: 0 };
+      const initial = {
+        date: getDateNumber(displayData.startDate),
+        total: 0,
+        goal: goalTotal,
+      };
+      const final: GraphDataType = {
+        date: getDateNumber(displayData.endDate),
+        goal: goalTotal,
+        // @ts-expect-error for the red line
+        total: undefined,
+      };
       if (catData) {
         const formatted = formatData(catData);
-        console.log(catData?.rows);
-        setGraphData([initial, ...formatted]);
+        setGraphData([initial, final, ...formatted]);
       }
     });
-  }, [displayData]);
+  }, [displayData, goalTotal]);
+
+  const xLabel = useMemo(() => {
+    if (displayType === 'monthly') {
+      return dayjs().subtract(displayPeriod, 'months').format('MMMM');
+    }
+    return dayjs().subtract(displayPeriod, 'months').format('MMMM');
+  }, [displayType, displayPeriod]);
+
   return (
     <View className="flex-1 h-[40vh] ">
-      <View className="flex-1 px-3">
+      <View className="flex-1 px-3 align-baseline pr-8">
         <CartesianChart
           data={graphData}
           domain={domain}
           xKey={'date'}
-          yKeys={['total']}
+          yKeys={['total', 'goal']}
           axisOptions={{
             lineColor: 'white',
             labelColor: 'white',
             font,
+            tickCount: 6,
             formatXLabel: (label) => {
               const l = label.toString();
               const day = parseInt(l.substring(l.length - 2));
@@ -89,18 +117,27 @@ const UsageGraph = ({ displayData, displayType, xLabel }: UsageGraphProps) => {
           }}
         >
           {({ points }) => {
+            // console.log(points.goal);
             return (
-              <Line
-                points={points.total}
-                color="white"
-                strokeWidth={3}
-                curveType={'bumpX'}
-              />
+              <>
+                <Line
+                  points={points.goal}
+                  color="red"
+                  strokeWidth={2}
+                  curveType={'linear'}
+                />
+                <Line
+                  points={points.total}
+                  color="white"
+                  strokeWidth={3}
+                  curveType={'bumpX'}
+                />
+              </>
             );
           }}
         </CartesianChart>
       </View>
-      <Text className="text-white text-lg text-center">{xLabel}</Text>
+      <Text className="flex-0 text-white text-lg text-center">{xLabel}</Text>
     </View>
   );
 };

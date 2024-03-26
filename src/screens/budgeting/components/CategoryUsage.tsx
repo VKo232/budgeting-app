@@ -1,3 +1,5 @@
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import clsx from 'clsx';
 import { useContext, useEffect, useState } from 'react';
 import { FlatList, View } from 'react-native';
@@ -8,6 +10,8 @@ import {
   getAllCategorySpending,
 } from '../../../lib/budgeting/queries';
 import { DatabaseContext } from '../../../lib/DatabaseProvider';
+import { BudgetingStackParamList } from '../../../navigation/navigation';
+import { Routes } from '../../../navigation/routeConstants';
 import { AddModalProps } from '../BudgetingHome';
 import CategoryUsageBar from './CategoryUsageBar';
 
@@ -36,6 +40,8 @@ const CategoryUsage = ({
   const [categoryData, setCategoryData] = useState<GetAllCategoriesResult[]>(
     [],
   );
+  const navigation =
+    useNavigation<NativeStackNavigationProp<BudgetingStackParamList>>();
   const shouldShowModal = (props: AddModalProps) => {
     setShowModalProps(props);
     showModal(true);
@@ -57,7 +63,6 @@ const CategoryUsage = ({
       }
     });
   }, [displayData]);
-
   return (
     <View
       className={clsx('flex-1 flex-col ', 'justify-between', 'bg-gray-800')}
@@ -71,7 +76,11 @@ const CategoryUsage = ({
         renderItem={({ item }: { item: GetAllCategoriesResult }) => {
           return (
             <CategoryUsageBar
-              onPress={() => {}}
+              onPress={() => {
+                navigation.navigate(Routes.BudgetingCategorySpend, {
+                  categoryId: item.categoryId,
+                });
+              }}
               onAdd={shouldShowModal}
               label={item.name}
               {...item}

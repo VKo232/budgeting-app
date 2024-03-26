@@ -13,4 +13,5 @@ export const Routes = {
   NotesHome: 'NoteHome',
   // Budgeting
   BudgetingHome: 'BudgetingHome',
+  BudgetingCategorySpend: 'BudgetingCategorySpend',
 } as const;

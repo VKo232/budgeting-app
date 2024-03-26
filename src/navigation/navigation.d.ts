@@ -1,3 +1,4 @@
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import type {
   CompositeScreenProps,
@@ -8,6 +9,7 @@ import { Routes } from './routeConstants';
 
 export type BudgetingStackParamList = {
   [Routes.BudgetingHome]: undefined;
+  [Routes.BudgetingCategorySpend]: { categoryId: number };
 };
 
 export type RootStackParamList = {
@@ -35,7 +37,7 @@ export type BottomTabsParamList = {
   [Routes.Camera]: undefined;
   [Routes.Budget]: NavigatorScreenParams<
     BudgetingStackParamList,
-    [Routes.NotesHome]
+    [Routes.BudgetingHome]
   >;
 
   [Routes.Settings]: undefined;
@@ -48,5 +50,10 @@ export type DrawerParamList = {
 export type NoteDrawerScreenProps<T extends keyof DrawerParamList> =
   CompositeScreenProps<
     DrawerScreenProps<DrawerParamList, T>,
+    RootStackScreenProps<keyof RootStackParamList>
+  >;
+export type AppBottomBarScreenProps<T extends keyof BottomTabsParamList> =
+  CompositeScreenProps<
+    BottomTabScreenProps<BottomTabsParamList, T>,
     RootStackScreenProps<keyof RootStackParamList>
   >;
