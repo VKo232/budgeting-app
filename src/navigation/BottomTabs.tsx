@@ -30,7 +30,7 @@ export default function BottomTabs() {
       }}
       tabBar={(props) => (
         <View>
-          <StatusBar style={'dark'} />
+          <StatusBar style={'light'} />
           <BottomTabBar {...props} />
         </View>
       )}

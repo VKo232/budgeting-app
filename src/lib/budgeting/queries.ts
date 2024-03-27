@@ -39,7 +39,8 @@ const queryAllCategorySpending = `Select *,Coalesce(total,0) as 'total', Coalesc
       date <= ?
     GROUP BY
       categoryId
-  ) as e1 on e1.categoryId = categories.id;`;
+  ) as e1 on e1.categoryId = categories.id 
+  ORDER BY total DESC;`;
 export const getAllCategorySpending = async (
   tx: SQLTransactionAsync,
   startDate?: Date,

@@ -10,7 +10,7 @@ import {
   getAllCategorySpending,
 } from '../../../lib/budgeting/queries';
 import { DatabaseContext } from '../../../lib/DatabaseProvider';
-import { BudgetingStackParamList } from '../../../navigation/navigation';
+import { BottomTabsParamList } from '../../../navigation/navigation';
 import { Routes } from '../../../navigation/routeConstants';
 import { AddModalProps } from '../BudgetingHome';
 import CategoryUsageBar from './CategoryUsageBar';
@@ -41,7 +41,7 @@ const CategoryUsage = ({
     [],
   );
   const navigation =
-    useNavigation<NativeStackNavigationProp<BudgetingStackParamList>>();
+    useNavigation<NativeStackNavigationProp<BottomTabsParamList>>();
   const shouldShowModal = (props: AddModalProps) => {
     setShowModalProps(props);
     showModal(true);
@@ -73,16 +73,23 @@ const CategoryUsage = ({
         keyExtractor={(item) => item.id.toString()}
         snapToAlignment="start"
         decelerationRate={'fast'}
+        ItemSeparatorComponent={() => (
+          <View className="w-full bg-slate-400 h-[1px]"></View>
+        )}
         renderItem={({ item }: { item: GetAllCategoriesResult }) => {
           return (
             <CategoryUsageBar
               onPress={() => {
-                navigation.navigate(Routes.BudgetingCategorySpend, {
-                  categoryId: item.categoryId,
+                navigation.navigate(Routes.Budget, {
+                  screen: Routes.BudgetingCategorySpend,
+                  params: {
+                    categoryId: item.categoryId,
+                  },
                 });
               }}
               onAdd={shouldShowModal}
               label={item.name}
+              descriptor={`$${item.total} of $${item.goal}`}
               {...item}
             />
           );

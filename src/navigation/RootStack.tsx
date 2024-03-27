@@ -12,7 +12,9 @@ const RootStack = () => {
     <Stack.Navigator>
       <Stack.Screen
         name={Routes.BottomTab}
-        options={{ headerShown: false }}
+        options={{
+          headerShown: false,
+        }}
         component={BottomTabs}
       />
       <Stack.Screen

@@ -117,7 +117,6 @@ const UsageGraph = ({
           }}
         >
           {({ points }) => {
-            // console.log(points.goal);
             return (
               <>
                 <Line

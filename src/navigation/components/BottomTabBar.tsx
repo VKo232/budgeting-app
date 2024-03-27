@@ -32,7 +32,7 @@ export default function BottomTabBar({
 }: BottomTabBarProps) {
   return (
     <View
-      className={`flex-row justify-evenly bg-gray-800`}
+      className={`flex-row justify-evenly bg-gray-800 border-t-[1px]`}
       style={{
         paddingVertical: 15,
       }}

@@ -14,6 +14,7 @@ export type CategoryUsageBarProps = {
   total: number;
   color: BarColor;
   id: number;
+  descriptor?: string;
 };
 const CategoryUsageBar = ({
   onAdd,
@@ -22,6 +23,7 @@ const CategoryUsageBar = ({
   goal,
   total,
   color,
+  descriptor,
   id,
 }: CategoryUsageBarProps) => {
   const percentage = useMemo(() => {
@@ -34,31 +36,41 @@ const CategoryUsageBar = ({
   return (
     <View className={clsx('flex-1')}>
       <TouchableOpacity onPress={onPress}>
-        <View className="flex-row px-4 py-6 align-middle">
-          <Text className="text-gray-400 flex-1 text-xl font-semibold ">
+        <View className="flex-row px-4 py-5">
+          <Text
+            className="text-gray-400 flex-1 text-xl font-semibold h-full"
+            style={{ verticalAlign: 'middle' }}
+          >
             {label}
           </Text>
-          <View className="flex-1 flex-row gap-3 ">
-            <Text
-              className="text-gray-300"
-              style={{ flex: 1, textAlign: 'right' }}
-            >{`${percentage}%`}</Text>
-            <GoalBar
-              className="h-3 self-center"
-              style={{ flex: 3 }}
-              percentage={percentage}
-              color={percentage > 100 ? 'red' : color}
-            />
+          <View className="flex-1 flex-row gap-3">
+            <View className="flex-1 flex-col">
+              <Text
+                className="text-gray-300 mb-2"
+                style={{ flex: 1, textAlign: 'right' }}
+              >
+                {descriptor ? descriptor : `${percentage}%`}
+              </Text>
+              <GoalBar
+                className="h-3"
+                style={{ flex: 1 }}
+                percentage={percentage}
+                color={percentage > 100 ? 'red' : color}
+              />
+            </View>
             <TouchableOpacity
               hitSlop={{ top: 20, bottom: 20, left: 50 }}
               style={{
-                flex: 1,
-                alignItems: 'center',
+                flex: 0,
               }}
               onPress={() => onAdd({ categoryId: id, categoryName: label })}
             >
               <Ionicons
-                style={{ flex: 1, color: 'rgb(209 213 219)' }}
+                style={{
+                  flex: 1,
+                  color: 'rgb(209 213 219)',
+                  verticalAlign: 'bottom',
+                }}
                 name="add"
                 size={24}
               />
