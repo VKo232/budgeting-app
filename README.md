@@ -1,4 +1,4 @@
-# photo-diary
+# Budgeting-app
 
 Ideas
 
