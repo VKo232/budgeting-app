@@ -14,6 +14,7 @@ export type GetAllCategoriesResult = {
   name: string;
   period: number;
   total: number;
+  mainCategory: number;
 };
 
 export type GetAllMainCategorySpendingResult = {
@@ -102,7 +103,7 @@ export const getAllCategories = async (tx: SQLTransactionAsync) => {
 
 const queryGetTotalExpenses = `
 Select new_date as date, MAX(total) as total FROM 
-  (Select *, SUM(amount) over (ORDER BY date) as total, date(date) as new_date
+  (Select *, coalesce(SUM(amount) over (ORDER BY date),0) as total, date(date) as new_date
   FROM EXPENSES
   WHERE date >= ? and date <= ?
   ORDER BY date) AS T1
@@ -141,6 +142,85 @@ export const getPeriodGoalTotal = async (
 ) => {
   try {
     return await tx.executeSqlAsync(queryPeriodGoalTotal, [period]);
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
+};
+
+const queryCategory = `
+SELECT * 
+FROM CATEGORIES 
+WHERE id=?
+`;
+
+export const getCategory = async (
+  tx: SQLTransactionAsync,
+  categoryId: number,
+) => {
+  try {
+    return await tx.executeSqlAsync(queryCategory, [categoryId]);
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
+};
+
+export const queryCategoryTotal = `
+SELECT COALESCE(SUM(amount),0) as total 
+FROM expenses 
+WHERE categoryId=? and date >= ? and date <= ? 
+`;
+
+export const getCategoryTotal = async (
+  tx: SQLTransactionAsync,
+  categoryId: number,
+  startDate?: Date,
+  endDate?: Date,
+) => {
+  try {
+    if (!startDate) {
+      startDate = new Date('2022-01-01');
+    }
+    if (!endDate) {
+      endDate = new Date();
+    }
+
+    return await tx.executeSqlAsync(queryCategoryTotal, [
+      categoryId,
+      dateToDbString(startDate),
+      dateToDbString(endDate),
+    ]);
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
+};
+export const queryAllExpenses = `
+SELECT * 
+FROM expenses 
+WHERE categoryId=? and date >= ? and date <= ? 
+`;
+
+export const getAllExpenses = async (
+  tx: SQLTransactionAsync,
+  categoryId: number,
+  startDate?: Date,
+  endDate?: Date,
+) => {
+  try {
+    if (!startDate) {
+      startDate = new Date('2022-01-01');
+    }
+    if (!endDate) {
+      endDate = new Date();
+    }
+
+    return await tx.executeSqlAsync(queryAllExpenses, [
+      categoryId,
+      dateToDbString(startDate),
+      dateToDbString(endDate),
+    ]);
   } catch (err) {
     console.log(err);
     return null;

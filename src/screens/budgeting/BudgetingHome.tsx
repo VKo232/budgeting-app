@@ -10,6 +10,7 @@ import {
   getAllCategorySpending,
   getPeriodGoalTotal,
 } from '../../lib/budgeting/queries';
+import { periodEndDate, periodStartDate } from '../../lib/dbUtils';
 import AddExpenseModal from './components/AddExpenseModal';
 import { BudgetHomeTitleBar } from './components/BudgetHomeTitleBar';
 import CategoryUsage from './components/CategoryUsage';
@@ -84,43 +85,24 @@ const BudgetingHome = () => {
   };
 
   const calculateDisplayDates = () => {
-    if (displayType === 'monthly') {
-      setDisplayDates({
-        startDate: dayjs()
-          .subtract(displayPeriod, 'months')
-          .startOf('month')
-          .toDate(),
-        endDate: dayjs()
-          .subtract(displayPeriod, 'months')
-          .endOf('month')
-          .toDate(),
-      });
-    }
-    if (displayType === 'all') {
+    if (displayType === 'custom') {
+      //
+    } else if (displayType === 'all') {
       setDisplayDates({
         startDate: new Date('2022-01-01'),
         endDate: new Date(),
       });
+      return;
     }
-    if (displayType === 'yearly') {
-      setDisplayDates({
-        startDate: dayjs()
-          .subtract(displayPeriod + 1, 'years')
-          .toDate(),
-        endDate: dayjs().subtract(displayPeriod, 'years').toDate(),
-      });
-    }
-    if (displayType === 'custom') {
-      //
-    }
-    if (displayType === 'weekly') {
-      setDisplayDates({
-        startDate: dayjs()
-          .subtract(displayPeriod + 1, 'weeks')
-          .toDate(),
-        endDate: dayjs().subtract(displayPeriod, 'weeks').toDate(),
-      });
-    }
+    let catPeriod: CategoryPeriod = 0;
+    if (displayType === 'monthly') catPeriod = CategoryPeriod.MONTHLY;
+    if (displayType === 'weekly') catPeriod = CategoryPeriod.WEEKLY;
+    if (displayType === 'yearly') catPeriod = CategoryPeriod.YEARLY;
+
+    setDisplayDates({
+      startDate: periodStartDate(catPeriod, displayPeriod),
+      endDate: periodEndDate(catPeriod, displayPeriod),
+    });
   };
 
   useEffect(() => {

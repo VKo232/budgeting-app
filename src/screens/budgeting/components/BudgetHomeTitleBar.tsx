@@ -29,7 +29,7 @@ export const BudgetHomeTitleBar = ({
           <GoalBar
             color="green"
             percentage={(spent / goalTotal) * 100}
-            className="h-3 bg-orange w-[200px] mb-2"
+            className="h-3 w-[300px] mb-2"
           />
         </View>
       </View>

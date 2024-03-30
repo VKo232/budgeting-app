@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import BudgetingHome from '../screens/budgeting/BudgetingHome';
-import CategorySpendScreen from '../screens/budgeting/CategorySpendScreen';
+import CategorySpendScreen from '../screens/budgeting/CategorySpendScreen/CategorySpendScreen';
 import { BudgetingStackParamList } from './navigation';
 import { Routes } from './routeConstants';
 

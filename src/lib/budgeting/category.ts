@@ -6,6 +6,10 @@ export enum CategoryPeriod {
   WEEKLY = 2,
 }
 
+export const isCategoryPeriod = (val: number): val is CategoryPeriod => {
+  return val in CategoryPeriod;
+};
+
 export type CategoryType = {
   id: number;
   name: string;
@@ -14,6 +18,7 @@ export type CategoryType = {
   color: BarColor;
   mainCategory: number;
 };
+
 export type BarColor = 'green' | 'blue' | 'purple' | 'orange' | 'red';
 
 export const defaultCategories = [
@@ -85,7 +90,7 @@ export const updateCategory = async (
              goal=?,\
              name=?,\
              color=?,\
-             main_category=?\
+             mainCategory=?\
          WHERE id=?;',
       [
         newCat.period,
@@ -120,12 +125,12 @@ export const addCategory = async (
   try {
     if (id) {
       await tx.executeSqlAsync(
-        'INSERT OR IGNORE into CATEGORIES(id,name,period,goal,color,main_category) values (?,?,?,?,?,?);',
+        'INSERT OR IGNORE into CATEGORIES(id,name,period,goal,color,mainCategory) values (?,?,?,?,?,?);',
         [id, name, period, goal, color, mainCategory ?? 0],
       );
     } else {
       await tx.executeSqlAsync(
-        'insert into CATEGORIES(name,period,goal,color,main_category) values (?,?,?,?,?);',
+        'insert into CATEGORIES(name,period,goal,color,mainCategory) values (?,?,?,?,?);',
         [name, period, goal, color, mainCategory ?? 0],
       );
     }
@@ -145,7 +150,7 @@ export const setupCategories = async (tx: SQLTransactionAsync) => {
             name TEXT, \
             period INTEGER, \
             goal INTEGER, \
-            main_category TEXT, \
+            mainCategory INTEGER, \
             color TEXT);',
     );
     // insert default categories

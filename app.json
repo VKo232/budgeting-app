@@ -1,7 +1,7 @@
 {
   "expo": {
     "entrypoint": "./App.ts",
-    "name": "notepad",
+    "name": "Budget",
     "slug": "notepad",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -12,7 +12,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -20,11 +22,23 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.qwertyuiop232.notepad"
     },
     "web": {
       "bundler": "metro",
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "71dd6516-107d-41ad-9f82-c40f4f4e5db6"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/71dd6516-107d-41ad-9f82-c40f4f4e5db6"
     }
   }
 }

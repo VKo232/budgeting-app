@@ -94,11 +94,11 @@ const AddExpenseModal = (props: Props) => {
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View
-          style={{ width: 300 }}
-          className=" bg-gray-400 rounded-3xl items-center flex px-8 py-4"
+          style={{ width: 350 }}
+          className=" bg-gray-800 rounded-3xl items-center flex px-8 py-4"
         >
           <Text
-            className={'font-semibold text-center text-3xl'}
+            className={'font-semibold text-center text-3xl text-white'}
             adjustsFontSizeToFit={true}
             numberOfLines={1}
           >
@@ -106,7 +106,7 @@ const AddExpenseModal = (props: Props) => {
           </Text>
           <TextInput
             className={
-              'text-center font-medium text-4xl h-[60px] w-[150px] border-b-4 border-gray-500'
+              'text-center font-medium text-4xl h-[60px] w-[150px] border-b-4 border-white'
             }
             inputMode={'decimal'}
             autoComplete="off"
@@ -116,6 +116,8 @@ const AddExpenseModal = (props: Props) => {
             onFocus={() => {
               if (amount == 0) setFormattedAmount('$');
             }}
+            style={{ color: 'white' }}
+            placeholderTextColor={'white'}
             onBlur={() => setFormattedAmount(format(amount))}
             blurOnSubmit
           />

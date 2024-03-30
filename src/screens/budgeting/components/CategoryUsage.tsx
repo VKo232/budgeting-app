@@ -29,6 +29,7 @@ const dataSchema = z.array(
     name: z.string(),
     period: z.number(),
     total: z.number(),
+    mainCategory: z.number(),
   }),
 );
 
@@ -65,7 +66,7 @@ const CategoryUsage = ({
   }, [displayData]);
   return (
     <View
-      className={clsx('flex-1 flex-col ', 'justify-between', 'bg-gray-800')}
+      className={clsx('flex-1 flex-col ', 'justify-between', 'bg-gray-900')}
     >
       <FlatList<GetAllCategoriesResult>
         style={{ height: 200, flex: 1, flexGrow: 1 }}
@@ -83,7 +84,7 @@ const CategoryUsage = ({
                 navigation.navigate(Routes.Budget, {
                   screen: Routes.BudgetingCategorySpend,
                   params: {
-                    categoryId: item.categoryId,
+                    category: item,
                   },
                 });
               }}

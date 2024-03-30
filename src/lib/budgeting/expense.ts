@@ -12,6 +12,13 @@ export type ExpenseType = {
   categoryId: number;
 };
 
+export type ExpenseResultType = {
+  id: number;
+  label: string; // max 50 chars
+  date: string;
+  amount: number;
+  categoryId: number;
+};
 export type AddExpenseType = Omit<ExpenseType, 'id'>;
 
 export const addExpense = async (

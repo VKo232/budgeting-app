@@ -36,7 +36,7 @@ const CategoryUsageBar = ({
   return (
     <View className={clsx('flex-1')}>
       <TouchableOpacity onPress={onPress}>
-        <View className="flex-row px-4 py-5">
+        <View className="flex-row pl-4 py-5">
           <Text
             className="text-gray-400 flex-1 text-xl font-semibold h-full"
             style={{ verticalAlign: 'middle' }}
@@ -59,9 +59,10 @@ const CategoryUsageBar = ({
               />
             </View>
             <TouchableOpacity
-              hitSlop={{ top: 20, bottom: 20, left: 50 }}
+              hitSlop={{ top: 20, bottom: 20, left: 30 }}
               style={{
                 flex: 0,
+                paddingRight: 8,
               }}
               onPress={() => onAdd({ categoryId: id, categoryName: label })}
             >

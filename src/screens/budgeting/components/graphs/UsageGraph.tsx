@@ -94,8 +94,8 @@ const UsageGraph = ({
   }, [displayType, displayPeriod]);
 
   return (
-    <View className="flex-1 h-[40vh] ">
-      <View className="flex-1 px-3 align-baseline pr-8">
+    <View className="flex-1 h-[35vh] ">
+      <View className="flex-1 px-3 pr-8">
         <CartesianChart
           data={graphData}
           domain={domain}

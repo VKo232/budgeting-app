@@ -22,11 +22,11 @@ const Settings = () => {
 export default function BottomTabs() {
   return (
     <Tab.Navigator
-      initialRouteName={Routes.NotesHome}
+      initialRouteName={Routes.Budget}
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
-        tabBarHideOnKeyboard: true,
+        // tabBarHideOnKeyboard: true,
       }}
       tabBar={(props) => (
         <View>
@@ -37,17 +37,18 @@ export default function BottomTabs() {
       backBehavior="history"
     >
       <Tab.Screen
+        name={Routes.Budget}
+        component={BudgetStack}
+        options={{
+          tabBarLabel: 'Budget',
+        }}
+      />
+
+      <Tab.Screen
         name={Routes.NotesHome}
         component={NoteHome}
         options={{
           tabBarLabel: 'Note',
-        }}
-      />
-      <Tab.Screen
-        name={Routes.Gallery}
-        component={Gallery}
-        options={{
-          tabBarLabel: 'Gallery',
         }}
       />
       <Tab.Screen
@@ -57,11 +58,12 @@ export default function BottomTabs() {
           tabBarLabel: 'Camera',
         }}
       />
+
       <Tab.Screen
-        name={Routes.Budget}
-        component={BudgetStack}
+        name={Routes.Gallery}
+        component={Gallery}
         options={{
-          tabBarLabel: 'Budget',
+          tabBarLabel: 'Gallery',
         }}
       />
       <Tab.Screen

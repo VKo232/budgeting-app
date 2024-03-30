@@ -5,11 +5,12 @@ import type {
   NavigatorScreenParams,
 } from '@react-navigation/native';
 import type { StackScreenProps } from '@react-navigation/stack';
+import { CategoryType } from '../lib/budgeting/category';
 import { Routes } from './routeConstants';
 
 export type BudgetingStackParamList = {
   [Routes.BudgetingHome]: undefined;
-  [Routes.BudgetingCategorySpend]: { categoryId: number };
+  [Routes.BudgetingCategorySpend]: { category: CategoryType };
 };
 
 export type RootStackParamList = {
