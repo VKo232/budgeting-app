@@ -200,6 +200,7 @@ export const queryAllExpenses = `
 SELECT * 
 FROM expenses 
 WHERE categoryId=? and date >= ? and date <= ? 
+ORDER BY date DESC
 `;
 
 export const getAllExpenses = async (

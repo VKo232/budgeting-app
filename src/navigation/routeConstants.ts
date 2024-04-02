@@ -14,4 +14,5 @@ export const Routes = {
   // Budgeting
   BudgetingHome: 'BudgetingHome',
   BudgetingCategorySpend: 'BudgetingCategorySpend',
+  BudgetingAddExpense: 'BudgetingAddExpenseScreen',
 } as const;

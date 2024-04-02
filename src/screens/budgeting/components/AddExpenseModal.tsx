@@ -37,6 +37,7 @@ type Props = {
   showModal: boolean;
   setShowModal: (_: boolean) => void;
   onDismiss: () => void;
+  showCalendar?: boolean;
 };
 const AddExpenseModal = (props: Props) => {
   const [amount, setAmount] = useState<number>(0);
@@ -58,20 +59,24 @@ const AddExpenseModal = (props: Props) => {
     if (text && text !== '$' && text !== '') {
       const newAmt = parseFloat(text?.match('\\d+(\\.\\d{1,2})?')![0] ?? 0);
       setAmount(newAmt);
-      if (text.endsWith('.')) setFormattedAmount(`$${newAmt}.`);
-      else setFormattedAmount(`$${newAmt}`);
+      if (text.endsWith('.')) {
+        setFormattedAmount(`$${newAmt}.`);
+      } else {
+        setFormattedAmount(`$${newAmt}`);
+      }
     } else {
       setAmount(0);
-      setFormattedAmount('$');
+      setFormattedAmount('');
     }
   };
-  const onDismiss = () => {
+
+  const onDismiss = async () => {
+    props.setShowModal(false);
     Keyboard.dismiss();
     resetFields();
     if (props.onDismiss) {
       props.onDismiss();
     }
-    props.setShowModal(false);
   };
 
   const onSubmit = async () => {
@@ -121,6 +126,7 @@ const AddExpenseModal = (props: Props) => {
             onBlur={() => setFormattedAmount(format(amount))}
             blurOnSubmit
           />
+
           <TextInput
             className="bg-white mt-4 rounded-md self-stretch px-2 font-medium text-base"
             placeholder="Description"
@@ -140,7 +146,7 @@ const AddExpenseModal = (props: Props) => {
               }}
             >
               <Text className=" text-center font-bold text-white text-lg flex-1">
-                Add Expense
+                Confirm
               </Text>
               <View
                 style={{

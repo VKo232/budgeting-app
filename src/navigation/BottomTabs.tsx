@@ -1,5 +1,4 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { StatusBar } from 'expo-status-bar';
 import { View } from 'react-native';
 import NoteHome from '../screens/notes/NoteHome';
 import BudgetStack from './BudgetStack';
@@ -26,14 +25,9 @@ export default function BottomTabs() {
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
-        // tabBarHideOnKeyboard: true,
+        tabBarHideOnKeyboard: true,
       }}
-      tabBar={(props) => (
-        <View>
-          <StatusBar style={'light'} />
-          <BottomTabBar {...props} />
-        </View>
-      )}
+      tabBar={(props) => <BottomTabBar {...props} />}
       backBehavior="history"
     >
       <Tab.Screen

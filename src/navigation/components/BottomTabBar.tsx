@@ -1,11 +1,6 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
-import {
-  StatusBar as RStatusBar,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 
 const categoryMap = {
   Note: {
@@ -37,7 +32,6 @@ export default function BottomTabBar({
         paddingVertical: 15,
       }}
     >
-      <RStatusBar />
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
         const label = options.tabBarLabel as keyof typeof categoryMap;

@@ -1,6 +1,12 @@
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback, useContext, useState } from 'react';
-import { SectionList, Text, TouchableOpacity, View } from 'react-native';
+import { PanResponder, SectionList, Text, View } from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
+import useBudgeting from '../../../../lib/budgeting/budgeting';
 import { CategoryPeriod } from '../../../../lib/budgeting/category';
 import {
   ExpenseResultType,
@@ -26,11 +32,9 @@ const ExpenseList = ({ categoryId, period }: Props) => {
     return rows.reduce(
       (prev: SectionedData[], item) => {
         const newDate = dbDateToDate(item.date);
-        while (newDate < sectionDate && ago < 4) {
+        while (newDate < sectionDate && ago < 2000) {
           ago++;
-          console.log(period, ago);
           sectionDate = periodStartDate(period, ago);
-          console.log(newDate, sectionDate);
           prev.push({ data: [], datePeriod: sectionDate });
         }
         prev[prev.length - 1].data.push({ ...item, date: newDate });
@@ -39,25 +43,89 @@ const ExpenseList = ({ categoryId, period }: Props) => {
       [{ data: [], datePeriod: new Date() }],
     );
   };
+  const updateExpenses = useCallback(() => {
+    db.transactionAsync(async (tx) => {
+      getAllExpenses(tx, categoryId).then((val) =>
+        setHistory(formatQueryToSections(val?.rows as ExpenseResultType[])),
+      );
+    });
+  }, [categoryId]);
 
-  useFocusEffect(
-    useCallback(() => {
-      db.transactionAsync(async (tx) => {
-        getAllExpenses(tx, categoryId).then((val) =>
-          setHistory(formatQueryToSections(val?.rows as ExpenseResultType[])),
-        );
+  useFocusEffect(updateExpenses);
+
+  const { removeExpense } = useBudgeting();
+
+  const handleDeleteItem = (id: number) => {
+    removeExpense(id);
+    updateExpenses();
+  };
+
+  const RenderItem = ({ item }: { item: ExpenseType; index: number }) => {
+    const offset = useSharedValue(0);
+    const LEFT_BOUNDARY = -160;
+    const RIGHT_BOUNDARY = 160;
+
+    const animatedStyles = useAnimatedStyle(() => ({
+      transform: [{ translateX: offset.value }],
+    }));
+
+    const advanceBy = (position: number) => {
+      const previousOffset = offset.value;
+      if (previousOffset < LEFT_BOUNDARY && position <= 0) return;
+      if (previousOffset > RIGHT_BOUNDARY && position >= 0) return;
+      if (Math.abs(position) > 0) {
+        const newOffset = Math.atan(position) * 40;
+        offset.value = withSpring(newOffset, {
+          restDisplacementThreshold: 1,
+          restSpeedThreshold: 1,
+        });
+      }
+    };
+
+    const panResponder = (id: number) => {
+      return PanResponder.create({
+        onStartShouldSetPanResponder: () => true,
+        onPanResponderMove: (_, gestureState) => {
+          advanceBy(gestureState.dx);
+        },
+        onPanResponderRelease: (_e, gestureState) => {
+          if (gestureState.dx >= 250) {
+            handleDeleteItem(id);
+          } else {
+            offset.value = withSpring(0, {
+              restDisplacementThreshold: 5,
+              restSpeedThreshold: 5,
+            });
+          }
+        },
+        onPanResponderEnd: () => {
+          offset.value = withSpring(0, {
+            restDisplacementThreshold: 5,
+            restSpeedThreshold: 5,
+          });
+        },
       });
-    }, [categoryId]),
-  );
+    };
+    return (
+      <View {...panResponder(item.id).panHandlers} style={[]}>
+        <Animated.View style={[animatedStyles]}>
+          <View className="flex-row justify-between py-5 px-4 ">
+            <Text className="text-white">{item.date.toLocaleDateString()}</Text>
+            <Text className="text-white">{item.label}</Text>
+            <Text className="text-white">${item.amount.toFixed(2)}</Text>
+          </View>
+        </Animated.View>
+      </View>
+    );
+  };
 
   return (
-    <View>
+    <View style={{ width: '100%' }}>
       <SectionList<ExpenseType, SectionedData>
         sections={history}
-        ListHeaderComponent={ListHeaderComponent}
         ListEmptyComponent={ListEmptyComponent}
         ItemSeparatorComponent={() => (
-          <View className="w-full bg-slate-400 h-[1px]"></View>
+          <View className="mx-4 bg-slate-600 h-[1px]"></View>
         )}
         renderItem={RenderItem}
         renderSectionHeader={RenderSectionHeader}
@@ -71,23 +139,12 @@ const RenderSectionHeader = ({
 }: {
   section: { datePeriod: Date };
 }) => {
-  console.log(section);
   return (
-    <View>
-      <Text className="p-2 text-white">
-        {section.datePeriod.toLocaleDateString()}
+    <View style={{ backgroundColor: 'rgb(75 85 99)' }}>
+      <View className="bg-white h-[1px]"></View>
+      <Text className="p-2 text-white ">
+        {section.datePeriod.toDateString()}
       </Text>
-    </View>
-  );
-};
-
-const RenderItem = ({ item }: { item: ExpenseType; index: number }) => {
-  console.log('render item', item);
-  return (
-    <View className="flex-row justify-between">
-      <Text className="text-white">{item.date.toDateString()}</Text>
-      <Text className="text-white">{item.label}</Text>
-      <Text className="text-white">${item.amount.toFixed(2)}</Text>
     </View>
   );
 };
@@ -101,19 +158,6 @@ const ListEmptyComponent = () => {
       >
         Nothing to show
       </Text>
-    </View>
-  );
-};
-const ListHeaderComponent = () => {
-  return (
-    <View style={{ marginTop: 20 }}>
-      <View className="flex-row justify-between px-6">
-        <Text className="text-2xl text-white">Expense List</Text>
-        <TouchableOpacity>
-          <Text className="text-2xl text-blue-400">Add</Text>
-        </TouchableOpacity>
-      </View>
-      <View className="w-full mt-2 bg-slate-400 h-[1px]"></View>
     </View>
   );
 };

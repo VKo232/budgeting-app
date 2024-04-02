@@ -11,6 +11,7 @@ import { Routes } from './routeConstants';
 export type BudgetingStackParamList = {
   [Routes.BudgetingHome]: undefined;
   [Routes.BudgetingCategorySpend]: { category: CategoryType };
+  [Routes.BudgetingAddExpense]: { categoryId: number; categoryName: string };
 };
 
 export type RootStackParamList = {

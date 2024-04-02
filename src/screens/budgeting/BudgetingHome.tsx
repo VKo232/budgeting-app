@@ -118,9 +118,9 @@ const BudgetingHome = () => {
       <AddExpenseModal
         showModal={showModal}
         setShowModal={setShowModal}
-        onDismiss={() => {
+        onDismiss={useCallback(() => {
           setDisplayDates({ ...displayDates });
-        }}
+        }, [displayDates])}
         {...addModalProps}
       />
       <BudgetHomeTitleBar
