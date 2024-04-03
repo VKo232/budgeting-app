@@ -44,7 +44,11 @@ const BudgetingHome = () => {
   const [goalTotal, setGoalTotal] = useState<number>(100);
   const [spent, setSpent] = useState<number>(0);
 
-  useFocusEffect(useCallback(() => {}, [setDisplayType, setDisplayPeriod]));
+  useFocusEffect(
+    useCallback(() => {
+      setDisplayDates({ ...displayDates });
+    }, [setDisplayType, setDisplayPeriod]),
+  );
 
   const calculateTotals = () => {
     const { startDate, endDate } = displayDates;

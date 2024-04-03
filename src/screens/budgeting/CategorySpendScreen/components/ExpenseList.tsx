@@ -1,3 +1,4 @@
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback, useContext, useState } from 'react';
 import { PanResponder, SectionList, Text, View } from 'react-native';
@@ -64,7 +65,6 @@ const ExpenseList = ({ categoryId, period }: Props) => {
     const offset = useSharedValue(0);
     const LEFT_BOUNDARY = -160;
     const RIGHT_BOUNDARY = 160;
-
     const animatedStyles = useAnimatedStyle(() => ({
       transform: [{ translateX: offset.value }],
     }));
@@ -74,7 +74,7 @@ const ExpenseList = ({ categoryId, period }: Props) => {
       if (previousOffset < LEFT_BOUNDARY && position <= 0) return;
       if (previousOffset > RIGHT_BOUNDARY && position >= 0) return;
       if (Math.abs(position) > 0) {
-        const newOffset = Math.atan(position) * 40;
+        const newOffset = Math.atan(position) * 30;
         offset.value = withSpring(newOffset, {
           restDisplacementThreshold: 1,
           restSpeedThreshold: 1,
@@ -93,22 +93,62 @@ const ExpenseList = ({ categoryId, period }: Props) => {
             handleDeleteItem(id);
           } else {
             offset.value = withSpring(0, {
-              restDisplacementThreshold: 5,
-              restSpeedThreshold: 5,
+              restDisplacementThreshold: 1,
+              damping: 30,
             });
           }
-        },
-        onPanResponderEnd: () => {
-          offset.value = withSpring(0, {
-            restDisplacementThreshold: 5,
-            restSpeedThreshold: 5,
-          });
         },
       });
     };
     return (
-      <View {...panResponder(item.id).panHandlers} style={[]}>
-        <Animated.View style={[animatedStyles]}>
+      <View>
+        <View
+          className="bg-red-400"
+          style={{
+            left: 0,
+            position: 'absolute',
+            height: '100%',
+            width: '50%',
+          }}
+        >
+          <Ionicons
+            style={{
+              flex: 1,
+              color: 'rgb(209 213 219)',
+              marginLeft: 14,
+              verticalAlign: 'middle',
+            }}
+            name="trash-outline"
+            size={30}
+          />
+        </View>
+        <View
+          className="bg-blue-600"
+          style={{
+            right: 0,
+            position: 'absolute',
+            height: '100%',
+            width: '50%',
+            justifyContent: 'center',
+          }}
+        >
+          <Ionicons
+            style={{
+              color: 'rgb(209 213 219)',
+              marginRight: 14,
+              verticalAlign: 'middle',
+              textAlign: 'right',
+            }}
+            name="pencil"
+            size={30}
+          />
+        </View>
+
+        <Animated.View
+          style={[animatedStyles]}
+          {...panResponder(item.id).panHandlers}
+          className={'bg-gray-800'}
+        >
           <View className="flex-row justify-between py-5 px-4 ">
             <Text className="text-white">{item.date.toLocaleDateString()}</Text>
             <Text className="text-white">{item.label}</Text>

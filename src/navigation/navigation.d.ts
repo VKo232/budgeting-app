@@ -12,6 +12,7 @@ export type BudgetingStackParamList = {
   [Routes.BudgetingHome]: undefined;
   [Routes.BudgetingCategorySpend]: { category: CategoryType };
   [Routes.BudgetingAddExpense]: { categoryId: number; categoryName: string };
+  [Routes.BudgetingEditCategory]: { category: CategoryType };
 };
 
 export type RootStackParamList = {

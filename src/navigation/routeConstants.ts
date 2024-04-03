@@ -15,4 +15,5 @@ export const Routes = {
   BudgetingHome: 'BudgetingHome',
   BudgetingCategorySpend: 'BudgetingCategorySpend',
   BudgetingAddExpense: 'BudgetingAddExpenseScreen',
+  BudgetingEditCategory: 'BudgetingEditCategoryScreen',
 } as const;
