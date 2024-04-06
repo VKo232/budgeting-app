@@ -1,4 +1,4 @@
-import { useFocusEffect } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 import dayjs from 'dayjs';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { View } from 'react-native';
@@ -31,10 +31,10 @@ const initialDates = {
 const BudgetingHome = () => {
   const { top } = useSafeAreaInsets();
   const [showModal, setShowModal] = useState(false);
-  const [displayType, setDisplayType] = useState<DisplayType>('monthly');
+  const [displayType] = useState<DisplayType>('monthly');
   const [displayDates, setDisplayDates] =
     useState<DisplayDateType>(initialDates);
-  const [displayPeriod, setDisplayPeriod] = useState<number>(0);
+  const [displayPeriod] = useState<number>(0);
   const [addModalProps, setAddModalProps] = useState<AddModalProps>({
     categoryId: 0,
     categoryName: '',
@@ -44,11 +44,15 @@ const BudgetingHome = () => {
   const [goalTotal, setGoalTotal] = useState<number>(100);
   const [spent, setSpent] = useState<number>(0);
 
-  useFocusEffect(
-    useCallback(() => {
-      setDisplayDates({ ...displayDates });
-    }, [setDisplayType, setDisplayPeriod]),
-  );
+  const reset = () => {
+    setDisplayDates({ ...displayDates });
+  };
+  const isFocused = useIsFocused();
+  useEffect(() => {
+    if (isFocused) {
+      reset();
+    }
+  }, [isFocused]);
 
   const calculateTotals = () => {
     const { startDate, endDate } = displayDates;
@@ -139,6 +143,8 @@ const BudgetingHome = () => {
         displayPeriod={displayPeriod}
         goalTotal={goalTotal}
       />
+
+      <View className="bg-white h-[1px] mt-1"></View>
       <CategoryUsage
         showModal={setShowModal}
         setShowModalProps={setAddModalProps}

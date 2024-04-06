@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AddExpenseScreen from '../screens/budgeting/AddExpenseScreen/AddExpenseScreen';
 import BudgetingHome from '../screens/budgeting/BudgetingHome';
 import CategorySpendScreen from '../screens/budgeting/CategorySpendScreen/CategorySpendScreen';
+import EditCategoryScreen from '../screens/budgeting/EditCategoryScreen/EditCategoryScreen';
 import { BudgetingStackParamList } from './navigation';
 import { Routes } from './routeConstants';
 
@@ -24,6 +25,11 @@ const BudgetStack = () => {
         name={Routes.BudgetingAddExpense}
         options={{ headerShown: false }}
         component={AddExpenseScreen}
+      />
+      <Stack.Screen
+        name={Routes.BudgetingEditCategory}
+        options={{ headerShown: false }}
+        component={EditCategoryScreen}
       />
     </Stack.Navigator>
   );

@@ -1,22 +1,25 @@
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Text, TouchableOpacity, View } from 'react-native';
-import { BarColor, CategoryPeriod } from '../../../../lib/budgeting/category';
+import {
+  BarColor,
+  CategoryPeriod,
+  CategoryType,
+} from '../../../../lib/budgeting/category';
 import { BudgetingStackParamList } from '../../../../navigation/navigation';
+import { Routes } from '../../../../navigation/routeConstants';
 import GoalBar from '../../components/GoalBar';
 
 type CategoryTitleBar = {
   name: string;
   spent: number;
   goalTotal: number;
-  period: CategoryPeriod;
-  navigation: NativeStackNavigationProp<
-    BudgetingStackParamList,
-    'BudgetingCategorySpend'
-  >;
+  navigation: NativeStackNavigationProp<BudgetingStackParamList>;
+  category: CategoryType;
   color: BarColor;
 };
 const CategorySpendTitleBar = (props: CategoryTitleBar) => {
-  const { name, spent, goalTotal, navigation, period, color } = props;
+  const { spent, navigation, category } = props;
+  const { goal, period, name, color } = category;
   const periodName = () => {
     if (period === CategoryPeriod.MONTHLY) {
       return 'month';
@@ -50,12 +53,17 @@ const CategorySpendTitleBar = (props: CategoryTitleBar) => {
               className="color-white mr-3 text-base mb-2"
               style={{ verticalAlign: 'top' }}
             >
-              ${spent} of ${goalTotal} this {periodName()}
+              ${spent} of ${goal} this {periodName()}
             </Text>
           </View>
         </View>
         <TouchableOpacity
           style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+          onPress={() => {
+            navigation.navigate(Routes.BudgetingEditCategory, {
+              category,
+            });
+          }}
         >
           <Text className="text-blue-400 text-xl">Edit</Text>
         </TouchableOpacity>
@@ -63,7 +71,7 @@ const CategorySpendTitleBar = (props: CategoryTitleBar) => {
       <View className="flex-row w-full justify-center ">
         <GoalBar
           color={color}
-          percentage={(spent / (goalTotal ?? 1)) * 100}
+          percentage={(spent / (goal ?? 1)) * 100}
           className="h-3 w-[300px]"
         />
       </View>

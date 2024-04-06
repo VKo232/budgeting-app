@@ -46,9 +46,9 @@ const CategorySpendScreen = ({ navigation, route }: Props) => {
         name={categoryName}
         spent={spent}
         goalTotal={goal}
-        period={period}
         color={color}
         navigation={navigation}
+        category={route.params.category}
       />
       <ScrollView style={{ flex: 1, flexDirection: 'column' }}>
         <HeaderComponent
