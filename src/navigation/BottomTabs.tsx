@@ -21,7 +21,7 @@ const Settings = () => {
 export default function BottomTabs() {
   return (
     <Tab.Navigator
-      initialRouteName={Routes.Budget}
+      initialRouteName={Routes.NotesHome}
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,

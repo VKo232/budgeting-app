@@ -24,7 +24,7 @@ export const BudgetHomeTitleBar = ({
             className="color-white mr-3 text-xl mb-2"
             style={{ verticalAlign: 'top' }}
           >
-            ${spent} of ${goalTotal}
+            ${spent.toFixed(2)} of ${goalTotal}
           </Text>
           <GoalBar
             color="green"

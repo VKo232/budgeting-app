@@ -27,16 +27,25 @@ openDatabase1;
 
 const database = openDatabase('db.db');
 const setupBudgeting = async (tx: SQLTransactionAsync) => {
-  // await tx.executeSqlAsync('drop table categories;');
   await setupMainCategory(tx);
   await setupCategories(tx);
   await setupExpenses(tx);
 };
 
 const setupDatabaseAsync = async () => {
-  return database.transactionAsync(async (tx: SQLTransactionAsync) => {
+  // try {
+  //   await database.transactionAsync(async (tx: SQLTransactionAsync) => {
+  //     await tx.executeSqlAsync('drop table CATEGORIES;');
+  //     await tx.executeSqlAsync('drop table MAIN_CATEGORY;');
+  //   });
+  // } catch (e) {}
+
+  await database.transactionAsync(async (tx: SQLTransactionAsync) => {
     await setupBudgeting(tx);
   });
+  // await database.transactionAsync(async (tx: SQLTransactionAsync) => {
+  //   console.log(await tx.executeSqlAsync(`select * from categories`));
+  // });
 };
 
 const db = {

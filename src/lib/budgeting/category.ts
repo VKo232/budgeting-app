@@ -21,14 +21,14 @@ export type CategoryType = {
 
 export type BarColor = 'green' | 'blue' | 'purple' | 'orange' | 'red';
 
-export const defaultCategories = [
+export const defaultCategories: CategoryType[] = [
   {
     id: 1,
     name: 'Food',
     period: CategoryPeriod.MONTHLY,
     goal: 400,
     color: 'orange',
-    mainCategory: 0,
+    mainCategory: 1,
   },
   {
     id: 2,
@@ -36,7 +36,7 @@ export const defaultCategories = [
     period: CategoryPeriod.MONTHLY,
     goal: 60,
     color: 'green',
-    mainCategory: 0,
+    mainCategory: 2,
   },
   {
     id: 3,
@@ -44,7 +44,7 @@ export const defaultCategories = [
     period: CategoryPeriod.YEARLY,
     goal: 100,
     color: 'blue',
-    mainCategory: 0,
+    mainCategory: 3,
   },
   {
     id: 4,
@@ -60,7 +60,7 @@ export const defaultCategories = [
     period: CategoryPeriod.MONTHLY,
     goal: 100,
     color: 'purple',
-    mainCategory: 0,
+    mainCategory: 4,
   },
 ];
 
@@ -125,13 +125,13 @@ export const addCategory = async (
   try {
     if (id) {
       await tx.executeSqlAsync(
-        'INSERT OR IGNORE into CATEGORIES(id,name,period,goal,color,mainCategory) values (?,?,?,?,?,?);',
-        [id, name, period, goal, color, mainCategory ?? 0],
+        'INSERT OR IGNORE into CATEGORIES (id,name,period,goal,mainCategory, color) values (?,?,?,?,?,?);',
+        [id, name, period, goal, mainCategory, color],
       );
     } else {
       await tx.executeSqlAsync(
-        'insert into CATEGORIES(name,period,goal,color,mainCategory) values (?,?,?,?,?);',
-        [name, period, goal, color, mainCategory ?? 0],
+        'insert into CATEGORIES (name,period,goal,mainCategory, color) values (?,?,?,?,?);',
+        [name, period, goal, mainCategory, color],
       );
     }
   } catch (err) {
@@ -145,19 +145,21 @@ export const setupCategories = async (tx: SQLTransactionAsync) => {
   try {
     // can remove exists then catch error to make sure table is initialized only once
     await tx.executeSqlAsync(
-      'CREATE TABLE if not EXISTS CATEGORIES \
-          (id integer primary key not null, \
-            name TEXT, \
-            period INTEGER, \
-            goal INTEGER, \
-            mainCategory INTEGER, \
-            color TEXT);',
+      `CREATE TABLE if not EXISTS CATEGORIES
+          (id integer primary key not null,
+            name TEXT,
+            period INTEGER,
+            goal INTEGER,
+            color TEXT,
+            mainCategory INTEGER,
+            FOREIGN KEY(mainCategory) REFERENCES MAIN_CATEGORY(ID));`,
     );
     // insert default categories
-    defaultCategories.forEach((category) => {
-      addCategory(tx, { ...category, color: category.color as BarColor });
+    await defaultCategories.forEach(async (category) => {
+      await addCategory(tx, category);
     });
   } catch (err) {
+    console.log(err);
     console.log('err initializing spending categories');
   }
 };
